@@ -1,0 +1,1668 @@
+/* ESTA PARTE: */
+/* http://meyerweb.com/eric/tools/css/reset/
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* ----------------------------- */
+
+/*
+  Zerfrex (R) RAD ADM
+  Zerfrex RAD for Administration & Data Management
+
+  Copyright (c) 2013-2022 by Jorge A. Montes Pérez <jorge@zerfrex.com>
+  All rights reserved. Todos los derechos reservados.
+
+  Este software solo se puede usar bajo licencia del autor.
+  El uso de este software no implica ni otorga la adquisición de
+  derechos de explotación ni de propiedad intelectual o industrial.
+ */
+
+@font-face {
+    font-family: 'open_sansregular';
+    src: url('OpenSans-Regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'open_sanslight';
+    src: url('OpenSans-Light-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'open_sansbold';
+    src: url('OpenSans-Bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Basic structure */
+html, body {
+    height: 100%;
+    font-family: open_sansregular, sans-serif;
+    font-size: 15px;
+    color: black;
+}
+
+.zbfOverwrapper {
+    display: flex;
+    height: 100%;
+}
+
+
+/* Simple elements */
+h1 {
+    font-size: 22px;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    color: #202020;
+    font-family: open_sanslight;
+}
+
+h2 {
+    font-size: 19px;
+    color: #404040;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    font-family: open_sanslight;
+}
+
+p {
+    margin-bottom: 16px;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+/* Common elements and adjustements*/
+
+.zjDesktop {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.zbfRow {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+
+.zbfBox {
+    background-color: #ffffff;
+    padding: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.2rem;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.zbfBoxThin {
+    background-color: #ffffff;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    border-radius: 0.2rem;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.zbfBox:last-of-type, .zbfBoxThin:last-of-type {
+    margin-bottom: 1rem;
+}
+
+.zbfFixedBox {
+}
+
+.zbfExpandBox {
+    overflow: auto;
+    min-height: 25%;
+}
+
+.zbfIcon {
+    text-decoration: none;
+    padding: 0.4rem;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+}
+
+.zbfBox > h1 {
+    margin-left: 0;
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.zbfBox > h2 {
+    margin-left: 0;
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.zbfBoxThin > h1 {
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+}
+
+.zbfBoxThin > h2 {
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+}
+
+.zbfFormContainer {
+    margin: 1rem;
+}
+
+/* Side panel */
+
+.zjNav {
+    overflow: auto;
+    width: 25rem;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    transition: width 0.25s;
+    background: #252525;
+}
+
+.zjNav.hidden {
+    width: 1px;
+    box-shadow: none;
+}
+
+.zjNav.stickout {
+    background: #001642;
+}
+
+/* Main area */
+
+.zjMain {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #e0e0e0;
+    position: relative;
+}
+
+.zbfMainHeader {
+    padding: 0.5rem;
+    color: white;
+    background-color: black;
+}
+
+.zbfMainHeader .zbfIcon {
+    color: #d0d0d0;
+    border: none;
+}
+
+.zbfMainHeader .zbfIcon:hover {
+    color: #ffffff;
+}
+
+.zbfMainFooter {
+    padding: 1rem;
+    background-color: #a0a0a0;
+}
+
+.zbfIcons {
+    border: 1px;
+    border-style: solid;
+    border-color: transparent;
+    display: inline-block;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.zbfBlockDesktop {
+    flex-basis: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+}
+
+.zbfBlockBox {
+    flex-basis: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+.zjDroppableHover {
+    background-color: #FFE6A1;
+    color: #ada1ff;
+}
+
+/* Context */
+
+.zbfContext {
+    border: 1px solid #555555;
+    border-radius: 3px;
+    display: inline-block;
+    padding: 8px;
+    font-size: 14px;
+    background-color: #333333;
+}
+
+.zbfContext span, .zbfContext a {
+    margin-right: 8px;
+}
+
+.zbfContext *:last-child {
+    margin-right: 0;
+}
+
+.zbfContextValue {
+    font-weight: bold;
+}
+
+.zjContextMenu {
+    position: fixed;
+    border: 1px solid #666666;
+    border-radius: 3px;
+    margin: 10px;
+    padding: 8px;
+    font-size: 14px;
+    background-color: #555555;
+    z-index: 200;
+}
+
+.zjContextMenuHidden {
+    display: none;
+}
+
+.zjContextMenuItem {
+    margin-bottom: 4px;
+    padding: 4px;
+    color: #dddddd;
+}
+
+.zjContextMenuItem:last-child {
+    margin-bottom: 0;
+}
+
+/* Overlay windows */
+
+.zjOverlay {
+    position: absolute;
+    background-color: #eeeeee;
+    border: 1px solid #e0e0e0;
+    top: 1rem;
+    margin: 1rem;
+    bottom: 1rem;
+    box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    lex-basis: 100%;
+}
+
+.zjOverlayHeader {
+    margin-bottom: 0.5rem;
+    text-align: right;
+}
+
+.zjOverlayHeader .zbfIcon {
+    color: #707070;
+    text-decoration: none;
+    padding: 0;
+    border: 0;
+    font-size: 24px;
+    margin: 2px;
+}
+
+.zjOverlayHeader .zbfIcon:hover {
+    color: #000000;
+}
+
+/* Overlay Custom Modal */
+
+.zCustomModalOverlay {
+    content: "";
+    display: block;
+    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.zjModalOverlay {
+    position: fixed;
+    background-color: #eeeeee;
+    border: 1px solid #e0e0e0;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    lex-basis: 100%;
+}
+
+.zModalConfirmBtn {
+    width: fit-content;
+    height: 32px;
+    font-size: 1rem;
+    padding: 0.3rem 1rem;
+    background-color: #b23333;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.zModalCancelBtn {
+    width: fit-content;
+    height: 32px;
+    font-size: 1rem;
+    padding: 0.3rem 1rem;
+    background-color: #0073ff;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.zContainerFlexRow {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.zTextEnd {
+    text-align: end;
+}
+
+.zML1 {
+    margin-left: 1rem !important;
+}
+
+.zMT2 {
+    margin-top: 2rem !important;
+}
+
+/*
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+*/
+
+table {
+    border-collapse: collapse;
+    background-color: #fafafa;
+}
+
+table.struct {
+    border: 0;
+    background: inherit;
+}
+
+th {
+    padding: 6px;
+    font-weight: normal;
+    color: #303030;
+    border: 1px solid #b7b7b7;
+    border-bottom: 3px solid #b7b7b7;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #eaeaea;
+}
+
+td {
+    border: 1px solid #b7b7b7;
+    padding: 6px;
+    vertical-align: middle;
+}
+
+tr.zjData._even {
+    background-color: #ffffff;
+}
+
+table.struct th, table.struct td {
+    border-style: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    opacity: 0.5;
+}
+
+.sep {
+    margin-top: 15px;
+}
+
+._sep {
+    margin-bottom: 15px;
+}
+
+
+/**************************************************************************
+Menu
+**************************************************************************/
+._adm_menuGroup {
+    border: 1px solid #999999;
+    margin: 6px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+    background-color: #d5d5d5;
+}
+
+
+._adm_menuGroup ._header {
+    background-color: #a9a9a9;
+    padding: 8px;
+    color: #f0f0f0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+._adm_menuSections a {
+    color: #606060;
+    display: block;
+    padding: 8px;
+    padding-left: 8px;
+    white-space: nowrap;
+    font-size: 18px;
+
+}
+
+._adm_menuSections i.fas {
+    width: 1.4em;
+    text-align: center;
+}
+
+._adm_menuSections a:hover {
+    text-decoration: none;
+    color: #000000;
+    background-color: #efefef;
+}
+
+._adm_menuSections ._adm_menuSelected {
+    color: #000000;
+}
+
+._adm_menuSubsections a {
+    color: #606060;
+    display: block;
+    padding: 8px;
+    padding-left: 16px;
+    font-size: 14px;
+}
+
+
+._adm_menuSubsections a:hover {
+    text-decoration: none;
+    color: #000000;
+    background-color: #efefef;
+}
+
+._adm_menuSubsections ._adm_menuSelected {
+    background-color: #efefef;
+    color: #202020;
+}
+
+._adm_menuSubsections i.fas {
+    width: 2em;
+    text-align: center;
+}
+
+
+/**************************************************************************
+Paginator
+**************************************************************************/
+a._paginatorButton {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    margin-right: 4px;
+}
+
+a._paginatorButton:hover {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    margin-right: 4px;
+    background-color: #ffffff; /* Very light gray  */
+}
+
+a._paginatorNumber {
+    display: inline-block;
+    height: 15px;
+    vertical-align: top;
+    font-size: 15px;
+    text-align: center;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+div._paginatorNumber {
+    display: inline-block;
+    height: 16px;
+    min-width: 5em;
+    margin-right: 4px;
+    vertical-align: top;
+    font-size: 15px;
+    text-align: center;
+}
+
+/**************************************************************************
+Sort buttons
+**************************************************************************/
+a._sortButton {
+    /*
+    margin-left: 16px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    */
+    /*float: right;*/
+}
+
+a._ascSort {
+}
+
+a._descSort {
+}
+
+a._noSort {
+}
+
+/**************************************************************************
+Action buttons
+**************************************************************************/
+div._actionButtons {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+a.zjFvAction {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    margin-right: 6px;
+    margin-top: 2px;
+    padding: 2px;
+}
+
+._fvActionDisabled {
+    color: #aaaaaa;
+}
+
+a.zjFvAction:last-child {
+    margin-right: 2px;
+}
+
+/**************************************************************************
+TableView
+**************************************************************************/
+div._tableViewContainer {
+    overflow: auto;
+}
+
+table._tableView th {
+    /*white-space: nowrap;*/
+    /*vertical-align: middle;*/
+    /*text-align: left;*/
+}
+
+._colContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+}
+
+._colLabel {
+    white-space: nowrap;
+    margin-right: 16px;
+}
+
+._colButton {
+}
+
+table._tableView th._title {
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    background-color: #cccccc; /* Gray almost white */
+}
+
+table._tableView {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+table._tableView th._actions {
+    padding: 10px;
+}
+
+div._paginator {
+    display: inline-block;
+    float: left;
+    margin-right: 25px;
+}
+
+div._action {
+    display: inline-block;
+    float: left;
+    width: auto;
+}
+
+div._action a {
+    text-decoration: none;
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    padding-left: 27px;
+    padding-right: 10px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+div._action a:hover {
+    background-color: #ffffff;
+}
+
+div._toolBar {
+    margin-bottom: 4px;
+}
+
+div._title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+table._tableView th._actions div._action a {
+    background-color: #dddddd; /* Gray almost white */
+    color: #000000; /* Black */
+}
+
+table._tableView th._actions div._action a:hover {
+    background-color: #eeeeee; /* Gray almost white */
+    color: #333333; /* Dark grey */
+}
+
+td.zjData {
+    white-space: nowrap;
+}
+
+td.zjData._fvText {
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+tr.zjClickOnRow td.zjData {
+    cursor: pointer;
+}
+
+/**************************************************************************
+RowView
+**************************************************************************/
+table._rowView th {
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: left;
+}
+
+table._rowView th._title {
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    background-color: #cccccc; /* Gray almost white */
+}
+
+table._rowView {
+    margin-bottom: 15px;
+    width: 100%;
+    height: 100%;
+    min-width: 300px;
+}
+
+/**************************************************************************
+ textarea stuff
+**************************************************************************/
+textarea {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid #bbbbbb;
+    margin: 0;
+    background-color: white;
+    color: #000090;
+    padding: 2px;
+}
+
+._rowView textarea {
+    width: 90%;
+    min-width: 300px;
+}
+
+._textareaWrapper {
+    display: inline-block;
+    max-height: 100px;
+    /*min-width: 50rem;*/
+    overflow: auto;
+}
+
+/**************************************************************************
+FormView
+**************************************************************************/
+.zbfFormContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.zbfFormContainerExpanded {
+    flex-basis: 100%;
+}
+
+form._crud {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+}
+
+._fieldGroup {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+._fieldGroupTitle {
+    background: #e5e5e5;
+    color: #777777;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 80%;
+    font-family: open_sansbold;
+    padding: 0.5rem;
+}
+
+._fieldGroupInfo {
+    color: #777777;
+    margin-bottom: 1rem;
+    font-size: 80%;
+    font-family: open_sansbold;
+}
+
+._fieldGroupExpanded {
+    flex-basis: 100%;
+}
+
+._element {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    margin-right: 5px;
+}
+
+._fieldGroupExpanded ._element {
+    width: 100%;
+}
+
+._fieldGroupExpanded ._field {
+    flex-basis: 100%;
+}
+
+._fieldGroupExpanded textarea {
+    min-height: 100%;
+    max-height: 100%;
+}
+
+._label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #4b4b4b;
+    margin-bottom: 3px;
+
+}
+
+div._field {
+    color: #303030;
+}
+
+._form input:not([type=file]) {
+    border: 1px solid #bbbbbb;
+    margin: 0;
+    background-color: white;
+    color: #000090;
+    padding: 2px;
+}
+
+._form input:disabled {
+    background-color: #eeeeee;
+    color: #303030;
+}
+
+._formEmailNotification {
+    margin-bottom: 5px;
+}
+
+table._fieldGroupTable td._field {
+    border-right: 1px solid #bbbbbb;
+}
+
+table._fieldGroupTable td._field:last-of-type {
+    border-right: 0;
+}
+
+input:read-only
+{
+    background-color: #eeeeee;
+    color: #303030;
+}
+
+/**************************************************************************
+Filters
+**************************************************************************/
+._dhfb_form div, ._dhf_form div, ._dhfr_form div {
+    display: inline-block;
+    margin-right: 1em;
+    vertical-align: middle;
+}
+
+._dhfb_form, ._dhf_form, ._dhfr_form {
+    display: block;
+    margin-bottom: 10px;
+}
+
+._dhfb_form._compact, ._dhf_form._compact, ._dhfr_form._compact {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+._dhfb_form._compact div, ._dhf_form._compact div, ._dhfr_form._compact div {
+    margin-right: 0;
+}
+
+.zjDhContainer.zjDhFilterActive {
+    background: rgba(0, 0, 255, 0.1);
+    border: 1px solid rgba(0, 0, 255, 0.3);
+    padding: 4px;
+    border-radius: 3px;
+}
+
+.zjDhContainer {
+    background: rgba(150, 150, 150, 0.1);
+    border: 1px solid rgba(150, 150, 150, 0.3);
+    padding: 4px;
+    border-radius: 3px;
+}
+
+._dhfb_labelIn {
+    margin-left: 0.5rem;
+}
+
+._dhfb_dropdown {
+    margin-left: 0.5rem;
+}
+
+select.zjFilterList_select {
+    min-width: 7rem;
+}
+
+/**************************************************************************
+Validation
+**************************************************************************/
+
+.zjReqKO {
+    border-color: #e27777 !important
+}
+
+.zjReqOK {
+    border-color: #77974c !important
+}
+
+.zjLoading {
+    color: #555555;
+    background-image: url('img/loading.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+._highLighted {
+    background-color: white;
+}
+
+/**************************************************************************
+Misc
+**************************************************************************/
+.ui-effects-transfer {
+    border: 2px dashed red;
+}
+
+/*************************************************************************/
+
+._msg {
+    border-radius: 10px;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    border-style: dashed;
+    border-width: 1px;
+}
+
+._warning {
+    border-color: #e78f08;
+    color: #805007;
+}
+
+._error {
+    border-color: #cd0a0a;
+    color: #650000;
+}
+
+._info {
+    border-color: #5b9909;
+    color: #2B4C00;
+}
+
+._mono {
+    font-family: monospace;
+    white-space: normal;
+    display: block;
+    background-color: #e5fdff;
+    color: #000050;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+}
+
+
+._log {
+    font-family: monospace;
+    white-space: pre-wrap;
+    display: block;
+    background-color: #fffbe3;
+    color: #000050;
+    overflow-y: auto;
+}
+
+._syslog {
+    font-family: monospace;
+    white-space: pre-wrap;
+    display: block;
+    background-color: #000000;
+    color: #00ff00;
+    overflow-y: auto;
+}
+
+._left {
+    float: left;
+}
+
+._right {
+    float: right;
+}
+
+table._calendar {
+    width: 100%;
+    cursor: pointer;
+}
+
+table._calendar td {
+    height: 3em;
+    font-size: 120%;
+    color: gray;
+    text-align: center;
+}
+
+table._calendar td._populated {
+    color: black;
+    font-weight: bold;
+    background-color: #fefefe;
+
+}
+
+table._calendar td:hover {
+    background-color: rgba(255, 255, 0, 0.3);
+}
+
+table._calendar td._populated:hover {
+    background-color: yellow;
+}
+
+/*************************************************************************/
+
+._subactions {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    display: none;
+    background: #e7e7e7;
+    border-radius: 10px;
+    border: 1px solid #dadada;
+    padding: 5px;
+    z-index: 100;
+
+}
+
+._action:hover > ._subactions {
+    display: block;
+}
+
+._subactions ._action {
+    display: block;
+    clear: both;
+    padding: 5px;
+}
+
+
+/** TABS **/
+._tabBar {
+    background-color: #aaaaaa;
+    padding-top: 0.5em;
+}
+
+.zjTabButton {
+    padding: 0.5em;
+    background-color: #bbbbbb;
+    display: inline-block;
+}
+
+.zjTabButton:hover {
+    background-color: #ffffff;
+    opacity: 1;
+}
+
+.zjTabButton.zjTabSelected {
+    background-color: #eeeeee;
+}
+
+.zjTabButton.zjTabSelected:hover {
+    background-color: #eeeeee;
+    opacity: 1;
+}
+
+
+.zjTabPanel {
+    display: none;
+}
+
+.zjTabPanel.zjTabSelected {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: column;
+}
+
+/* ImageURL */
+._fvImageUrl {
+    max-width: 8rem;
+    max-height: 8rem;
+}
+
+
+/* Uploader of files and images */
+
+.zjFvImage, .zjFvFile {
+    border: 1px solid #bbbbbb;
+    margin: 0;
+    background-color: white;
+    padding: 8px;
+    overflow: hidden;
+}
+
+.zjFvImage img, .zjFvFile a {
+    max-width: 8rem;
+    max-height: 8rem;
+    float: left;
+    margin-right: 8px;
+}
+
+.zjFvSketch img._preview {
+    max-width: 8rem;
+    max-height: 8rem;
+    float: left;
+    margin-right: 8px;
+}
+
+.zjFvImage div, .zjFvFile div {
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.zjFvFile a {
+    font-size: 30px;
+    color: #8a8a8a;
+}
+
+/* Cards */
+.zbfCard {
+    display: inline-block;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    vertical-align: top;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.zbfCardDesktop {
+    width: 250px;
+}
+
+.zbfCardTitle {
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #eaeaea;
+    padding: 0.5rem;
+}
+
+.zbfCardContent {
+    padding: 1rem;
+    padding-bottom: 0;
+}
+
+.zbfCardContent:last-of-type {
+    padding-bottom: 1rem;
+}
+
+.zbfCardNote {
+    font-size: 12px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.zbfCardButton {
+    display: inline-block;
+    padding: 0.5rem;
+    font-size: 15px;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    vertical-align: top;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    background-color: #eaeaea;
+}
+
+.zbfCardButton:hover {
+    background-color: #444444;
+    color: white;
+}
+
+.zbfCardPayload {
+    text-align: center;
+    font-size: 45px;
+    margin: 1rem;
+    color: #202020;
+}
+
+.zbfCardIcon {
+    text-align: center;
+    font-size: 100px;
+    margin: 1rem;
+    color: #d0d0d0;
+}
+
+.zbfCardLegend {
+    text-align: center;
+    font-size: 12px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+
+.zbfCardContent ul li {
+    padding-left: 0;
+    padding-bottom: 0.5rem;
+    list-style-type: square;
+    list-style-position: inside;
+}
+
+.zbfCardContent ul ul li {
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    list-style-type: disc;
+    list-style-position: inside;
+}
+
+.zbfCardContent ul ul ul li {
+    padding-left: 3rem;
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+    list-style-type: none;
+    list-style-position: inside;
+}
+
+
+/** Misc **/
+
+.zbfFormContainer .zjRoElement {
+    display: inline-block;
+    border-top: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+    border-right: 1px solid #fafafa;
+    border-bottom: 1px solid #fafafa;
+    background-color: #e7e7e7;
+    padding: 4px;
+}
+
+.zbfFormContainer p {
+    margin: 1em;
+}
+
+.zbfFormContainer .zjRoElement._fvText {
+    font-family: monospace;
+    width: 100%;
+    height: 100%;
+}
+
+.zbfUiBox {
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+.zjFvSketch {
+    border: 1px solid #d0d0d0;
+    padding: 10px;
+}
+
+.zjSketch {
+    border: 1px dotted gray;
+    cursor: crosshair;
+}
+
+.magnify-stage {
+    background-color: white;
+}
+
+.zbfSketchButtonBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.zjSketchButton {
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    display: inline-block;
+    padding: 4px;
+}
+
+.zjSketchButton._enabled {
+    background-color: #ffffff;
+}
+
+.zjSketchButton:hover {
+    cursor: pointer;
+}
+
+.zjSketchButton img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Fast Inserter */
+
+.zafFastInserter {
+    margin-top: 10px;
+    border: 1px solid lightsteelblue;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 80%;
+    margin-bottom: 5px;
+}
+
+.zafFastInserterForm {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.zafFastInserterItem {
+    margin-right: 5px;
+}
+
+.zafFastInserterTitle {
+}
+
+.zafFastInserterSearch {
+}
+
+.zafFastInserterLabel {
+}
+
+.zafFastInserterInput {
+}
+
+.zafFastInserterButton {
+}
+
+.zafFastInserterList {
+    border: 1px solid lightsteelblue;
+    background-color: #ffffff;
+    margin-top: 10px;
+    display: none;
+    height: 10em;
+    overflow: auto;
+    padding: 10px;
+}
+
+.zafFastInserterResult {
+    margin-bottom: 5px;
+    padding: 5px;
+    display: block;
+    color: black;
+    border-bottom: 1px solid #ddd;
+}
+
+.zafFastInserterResult:focus {
+    background-color: #ccc;
+    color: black;
+}
+
+
+h1.zafPayload {
+    padding: 1rem;
+    background: #e0e0e0;
+    font-weight: bold;
+    margin-top: 2rem;
+    border-radius: 3px;
+}
+
+h1.zafPayload:first-of-type {
+    margin-top: 0;
+}
+
+h2.zafPayload {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background: #c7c7c7;
+    font-weight: bold;
+    margin-top: 1rem;
+    border-radius: 3px;
+}
+
+
+/* Maps */
+.zbfMapLabel {
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+
+/* Calendar */
+table.zbfCalendar {
+    width: 100%;
+}
+
+table.zbfCalendar td {
+    height: 3rem;
+    min-height: 3rem;
+    text-align: right;
+    vertical-align: top;
+}
+
+.zbfCalendarPayload {
+    text-align: left;
+    font-size: 200%;
+}
+
+
+.zjDatamap {
+    position: fixed;
+    z-index: 100000;
+    margin-top: 10px;
+    margin-left: 55px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background: rgba(255, 255, 255, 0.3);
+    min-height: 96px;
+    min-width: 96px;
+}
+
+.zjProcessing {
+    background-image: url('img/loading.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.zjInlineSaved {
+    background-color: rgb(229, 255, 208);
+}
+
+
+/* TREE */
+.zjTreeContainer {
+    padding: 1rem;
+    background-color: #f5f5f5;
+    width: fit-content;
+}
+
+.zjTreeNode {
+    margin-left: 4rem;
+    margin-bottom: 1rem;
+}
+
+.zjTreeNode:last-of-type {
+    margin-bottom: 0;
+}
+
+.zjTreeContainer > .zjTreeNode {
+    margin-left: 0rem;
+}
+
+.zjTreeSubtree {
+    margin-top: 1rem;
+}
+
+
+.zjTreeHeader {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    background-color: #e5e5e5;
+}
+
+.zjTreeLabel {
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.zjTreeInfo {
+    padding: 0.5rem;
+    white-space: nowrap;
+}
+
+.zjTreeIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zjTreeControl {
+    padding: 0.5rem;
+}
+
+.zjTreeContent {
+    padding: 0.5rem;
+    font-size: 13px;
+}
+
+.zjTreeClosed {
+    display: none;
+}
+
+/* PanelDrop */
+
+.zjPanelDropHeader {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: #e5e5e5;
+}
+
+.zjPanelDropHeader:hover {
+    background-color: #fefefe;
+    cursor: pointer;
+}
+
+.zjPanelDropHeader ._dhfb_form, .zjPanelDropHeader ._dhf_form, .zjPanelDropHeader._dhfr_form {
+    display: inline-block;
+    margin-bottom: 1px;
+    margin-top: 1px;
+}
+
+.zjPanelDropLabel {
+    padding: 0.5rem;
+}
+
+.zjPanelDropControl {
+    font-size: 25px;
+}
+
+.zjPanelDropContent {
+    padding: 0.5rem;
+    font-size: 13px;
+}
+
+.zjPanelDropClosed {
+    display: none;
+}
+
+/* --------------------------------- */
+
+#zjM {
+    display: none;
+}
+
+/* Estos cambios afectan a pantallas pequeñas (monitores antiguos, móviles, tablets, etc, así como de alta densidad HD.) */
+@media screen and (max-device-width: 1200px), screen and (max-device-width: 1920px) and (min-resolution: 1.5dppx) {
+
+    #zjM {
+        display: block;
+    }
+
+    .zbfBox {
+        padding: 0.1rem;
+        margin-left: 0.1rem;
+        margin-right: 0.1rem;
+        margin-top: 0.1rem;
+    }
+
+    .zbfBoxThin {
+        background-color: #ffffff;
+        margin-left: 0.1rem;
+        margin-right: 0.1rem;
+        margin-top: 0.1rem;
+    }
+
+    .zjOverlay {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    a._actionButton {
+        font-size: 20px;
+    }
+
+    td.zjData {
+        white-space: normal;
+    }
+
+    .zbfBlockDesktop {
+        overflow: scroll;
+    }
+
+}
+
+.zjExtSelect {
+    min-width: 5rem;
+}
+
+/************************
+FIXES
+ ************************/
+input[type="button"]:disabled {
+    color: lightgray;
+    background-color: gray;
+}

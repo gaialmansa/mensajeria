@@ -1,0 +1,159 @@
+/*
+  Zerfrex (R) RAD ADM
+  Zerfrex RAD for Administration & Data Management
+
+  Copyright (c) 2013-2022 by Jorge A. Montes Pérez <jorge@zerfrex.com>
+  All rights reserved. Todos los derechos reservados.
+
+  Este software solo se puede usar bajo licencia del autor.
+  El uso de este software no implica ni otorga la adquisición de
+  derechos de explotación ni de propiedad intelectual o industrial.
+ */
+
+
+/**
+ * @package adm
+ */
+
+/**************************************************************************
+Little reset
+**************************************************************************/
+
+div, p, h1, h2, h3, h4, h5, h6, html, body {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/**************************************************************************
+Main
+**************************************************************************/
+
+html {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+}
+
+.zbfLoginBottomLogo {
+    margin-top: 60px;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+}
+
+._loginwrapper1 {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+._loginwrapper2 {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+._login {
+    border-top: 1px solid #aaaaaa;
+    border-bottom: 1px solid #aaaaaa;
+    background: #eeeeee;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+}
+
+._loginLogoContainer {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+}
+
+._loginLogoSeparator {
+    clear: both;
+    margin: 20px;
+}
+
+._loginFormContainer {
+    display: inline-block;
+    text-align: left;
+}
+
+._element {
+    display: inline-table;
+    margin-bottom: 8px;
+    margin-right: 5px;
+}
+
+._label {
+    font-size: 85%;
+    font-weight: bold;
+}
+
+._field {
+    color: #303030;
+    padding: 2px;
+    margin: 0;
+    display: block;
+    min-height: 1.5em;
+}
+
+
+input {
+    border: 1px solid #bbbbbb;
+    margin: 0;
+    background-color: white;
+    color: #000090;
+    padding: 2px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #404040;
+}
+
+h1 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+/* Estos cambios afectan a pantallas pequeñas (monitores antiguos, móviles, tablets, etc, así como de alta densidad HD.) */
+@media screen and (max-device-width: 1200px), screen and (max-device-width: 1920px) and (min-resolution: 1.5dppx) {
+
+    .zbfLoginBottomLogo {
+        display: none;
+    }
+
+    html {
+        font-size: 20px;
+        background: black;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .zbfLoginLogo {
+        width: 50%;
+        height: 50%;
+    }
+
+    button {
+        font-size: 20px;
+    }
+
+    input {
+        font-size: 20px;
+    }
+
+}

@@ -1,0 +1,111 @@
+/*
+  Zerfrex (R) RAD ADM
+  Zerfrex RAD for Administration & Data Management
+
+  Copyright (c) 2013-2022 by Jorge A. Montes Pérez <jorge@zerfrex.com>
+  All rights reserved. Todos los derechos reservados.
+
+  Este software solo se puede usar bajo licencia del autor.
+  El uso de este software no implica ni otorga la adquisición de
+  derechos de explotación ni de propiedad intelectual o industrial.
+ */
+
+td.zjData {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+td.zjData._fvText {
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+tr.zjClickOnRow td.zjData {
+    cursor: pointer;
+}
+
+.zjFvImage img {
+    max-width: 6rem;
+    max-height: 6rem;
+    float: left;
+    margin-right: 6px;
+}
+
+.zjFvSketch img._preview {
+    max-width: 6rem;
+    max-height: 6rem;
+    float: left;
+    margin-right: 6px;
+}
+
+.zjFvSketch {
+    border: 1px solid #d0d0d0;
+    padding: 10px;
+}
+
+.magnify-stage {
+    background-color: white;
+}
+
+.zbfSketchButtonBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.zjSketchButton img {
+    width: 1rem;
+    height: 1rem;
+}
+
+.zjSketchButton._enabled {
+    background-color: #aaa;
+}
+
+.zjReqKO {
+    border-color: #dc3545 !important
+}
+
+.zjReqOK {
+    border-color: #65b800 !important
+}
+
+/* Fast Inserter */
+
+.zafFastInserter {
+    margin-top: 10px;
+    border: 1px solid lightsteelblue;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 80%;
+    margin-bottom: 5px;
+}
+
+
+.zafFastInserterList {
+    border: 1px solid lightsteelblue;
+    background-color: #ffffff;
+    margin-top: 10px;
+    display: none;
+    height: 10em;
+    overflow: auto;
+    padding: 10px;
+}
+
+.zafFastInserterResult {
+    margin-bottom: 5px;
+    padding: 5px;
+    display: block;
+    color: black;
+    border-bottom: 1px solid #ddd;
+}
+
+.zafFastInserterResult:focus {
+    background-color: #ccc;
+    color: black;
+}
+
+.zjDhFilterActive {
+    background: #7fbdff;
+}

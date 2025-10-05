@@ -9,11 +9,11 @@ class Experimental
         $this->db = $db;
      }
 
-    public function grabarHora($id_usuario)
+    public function grabarHora($id_usuario,$pcbat)
      {
         $qry = "
-                INSERT INTO extime (id_usuario, hora)
-                VALUES ($id_usuario, NOW())";
+                INSERT INTO extime (id_usuario, hora,pcbat)
+                VALUES ($id_usuario, NOW(),$pcbat)";
         $this->db->qr($qry);
      }
 

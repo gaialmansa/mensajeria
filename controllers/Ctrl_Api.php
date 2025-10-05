@@ -374,8 +374,9 @@ class  Ctrl_Api extends \zfx\Controller
        public function exrtime() //Registra la hora
         {
               $id_usuario = $_POST["id_usuario"];
+              $pcbat = $_POST["pcbat"];
               $Exp = New Experimental($this->db);
-              $Exp->grabarHora($id_usuario);
+              $Exp->grabarHora($id_usuario,$pcbat);
         }
        
        

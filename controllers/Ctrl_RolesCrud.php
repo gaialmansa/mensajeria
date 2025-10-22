@@ -16,12 +16,12 @@ use function zfx\va;
 
 include_once('Abs_AppCrudController.php');
 
-class Ctrl_UsuariosCrud extends Abs_AppCrudController
+class Ctrl_RolesCrud extends Abs_AppCrudController
 {
 
     protected function initData()
     {
-        $this->auto('usuarios');
+        $this->auto('roles');
     }
 
     // --------------------------------------------------------------------

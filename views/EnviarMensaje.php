@@ -8,26 +8,24 @@
     <div class="zbfCardTitle">Destinatario</div>
     <div class="zbfCardBody">
         <div class="zbfCardContent">
-            <select name="grupo">
-            <option value="-1">--Seleccionar grupo--</option> 
+            <select name="equipo">
+            <option value="-1">--Seleccionar equipo--</option> 
             <?php 
-            //echo var_dump($grupos);
-            foreach($grupos as $g)
+            foreach($equipos as $g)
             {
-                echo "<option value='{$g['id_grupo']}'> {$g['grupo']} </option>";
+                echo "<option value='{$g['id_equipo']}'> {$g['nombre']} </option>";
             }
             ?>
             </select>
         </div>
         <div class="zbfCardContent">
-<select name="usuario">
-    <option value="-1">--Seleccionar usuario--</option> 
+<select name="rol">
+    <option value="-1">--Seleccionar rol--</option> 
     <?php 
-    //echo var_dump($grupos);
-
-    foreach($usuarios as $u)
+    
+    foreach($roles as $rol)
     {
-            echo "<option value='{$u['id_usuario']}'> {$u['nombre']} </option>";
+            echo "<option value='{$rol['id_rol']}'> {$rol['nombre']} </option>";
            
     }
     ?>

@@ -1,5 +1,5 @@
 <?php
-class Puser
+class Rol
 {
     
     public $db;
@@ -9,11 +9,11 @@ class Puser
         $this->db = $db;
     }
 
-    public function getUsuarios()
+    public function getRoles()
     {
         $qry = "
                 SELECT * 
-                FROM USUARIOS
+                FROM roles
                 ORDER BY nombre
         ";
         return $this->db->qa($qry);

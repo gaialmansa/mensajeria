@@ -15,20 +15,20 @@ use zfx\Config;
 
 include_once('Abs_AppController.php');
 
-class Ctrl_Usuarios extends Abs_AppController
+class Ctrl_Equipos extends Abs_AppController
 {
 
     public function _main()
     {
         $this->_view->addSection('body', 'zaf/' . Config::get('admTheme') . '/crud-bootstrap-search', array(
-            '_title'      => 'Buscar usuarios',
-            '_controller' => 'UsuariosCrud',
+            '_title'      => 'Buscar equipos',
+            '_controller' => 'EquiposCrud',
             '_autoFocus'  => TRUE
         ));
         
         $this->_view->addSection('body', 'zaf/' . Config::get('admTheme') . '/crud-bootstrap-list', array(
-            '_title'      => 'Lista de usuarios',
-            '_controller' => 'UsuariosCrud'
+            '_title'      => 'Lista de Equipos',
+            '_controller' => 'EquiposCrud'
         ));
 
         $this->_view->show();

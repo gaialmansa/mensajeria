@@ -15,22 +15,22 @@ use zfx\Config;
 
 include_once('Abs_AppController.php');
 
-class Ctrl_Grupos extends Abs_AppController
+class Ctrl_Roles extends Abs_AppController
 {
 
     public function _main()
     {
         $this->_view->addSection('body', 'zaf/' . Config::get('admTheme') . '/crud-bootstrap-search', array(
-            '_title'      => 'Buscar grupos',
-            '_controller' => 'GruposCrud',
+            '_title'      => 'Buscar roles',
+            '_controller' => 'RolesCrud',
             '_autoFocus'  => TRUE
         ));
         
-        $this->_view->addSection('body', 'zaf/' . Config::get('admTheme') . '/crud-bootstrap-list', array(
-            '_title'      => 'Grupos actuales',
-            '_controller' => 'GruposCrud'
+       /* $this->_view->addSection('body', 'zaf/' . Config::get('admTheme') . '/crud-bootstrap-list', array(
+            '_title'      => 'Roles actuales',
+            '_controller' => 'RolesCrud'
         ));
-
+        */
         $this->_view->show();
     }
 

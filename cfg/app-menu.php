@@ -20,19 +20,14 @@ $pofemenu = array(
             'perm'        => '',
             'subsections' => array
             (
-                'pofemenu-tablas-usuarios' => array(
-                    'es'         => array('Usuarios', '<i class="fas fa-user-nurse"></i>'),
-                    'controller' => 'usuarios',
+                'pofemenu-tablas-roles' => array(
+                    'es'         => array('Roles', '<i class="fas fa-user-nurse"></i>'),
+                    'controller' => 'roles',
                     'perm'       => 'menu-mensajeria-usuarios',
                 ),
-                'pofemenu-tablas-grupos' => array(
-                    'es'         => array('Grupos de usuarios', '<i class="fas fa-users"></i>'),
-                    'controller' => 'grupos',
-                    'perm'       => '|',
-                ),
-                'pofemenu-asignar-busca' => array(
-                    'es'         => array('Asignar Busca', '<i class="fas fa-pager"></i>'),
-                    'controller' => 'asignar-beeper',
+                'pofemenu-tablas-equipos' => array(
+                    'es'         => array('Equipos', '<i class="fas fa-users"></i>'),
+                    'controller' => 'equipos',
                     'perm'       => '|',
                 ),
                 'pofemenu-enviar-mensaje' => array(

@@ -8,17 +8,17 @@ class  Mensaje
      {
         $this->db = $db;
      }
-   public function crear($id_usuario_o, $mensaje) //Crea un mensaje SIN enlazarlo con los usuarios destino. 
+   public function crear($id_origen, $mensaje) //Crea un mensaje SIN enlazarlo con los usuarios destino. 
      {
                 $timestamp = date('Y-m-d H:i:s', time());
                 $qry = "
                 INSERT INTO mensajes
-                (id_usuario_o,  hora_edicion, mensaje)
-                VALUES ($id_usuario_o,'$timestamp', '$mensaje')
+                (id_origen,  enviado, mensaje)
+                VALUES ($id_origen,'$timestamp', '$mensaje')
                 RETURNING id_mensaje";
                 return $this->db->qr($qry)['id_mensaje'];
      }
-   public function enlazarMensajeUsuario($id_mensaje, $id_usuario) //Enlaza un mensaje a un unico usuario
+   public function enlazarMensajeRol($id_mensaje, $id_Rol) //Enlaza un mensaje a un unico usuario
      {
             $qry = "
             INSERT INTO rmu

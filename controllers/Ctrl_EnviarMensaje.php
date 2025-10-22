@@ -13,8 +13,9 @@ class Ctrl_EnviarMensaje extends Abs_AppController
     {
         
         $data = array();
-        $data['grupos'] = $this->getGrupos();
-        $data['usuarios'] = $this->getUsuarios();
+        $data['equipos'] = $this->getEquipos();
+        $data['roles'] = $this->getRoles();
+        //die(var_dump($data));
         $this->_view->addSection('body',"EnviarMensaje",$data);
         $res = $this->_autoexec();
         $this->_view->show();
@@ -30,38 +31,38 @@ class Ctrl_EnviarMensaje extends Abs_AppController
     {
         return '';
     }
-    private function getGrupos()
+    private function getEquipos()
     {
-        $grupo = New Grupos(New \zfx\DB());
+        $equipo = New Equipo(New \zfx\DB());
     
-        return $grupo->getGrupos();
+        return $equipo->getEquipos();
     }
-    private function getUsuarios()
+    private function getRoles()
     {
-        $grupo = New Puser(New \zfx\DB());
+        $rol = New Rol(New \zfx\DB());
     
-        return $grupo->getUsuarios();
+        return $rol->getRoles();
     }
     public function accion()
     {
-        $id_usuario = $_GET['usuario'];
-        $id_grupo = $_GET['grupo'];
+        $id_rol = $_GET['rol'];
+        $id_equipo = $_GET['equipo'];
         $mensajeText = $_GET['mensaje'];
-        $id_usuario_o = 2;  // TODO: cambiarlo por el usuario logueado en el sistema
+        $id_origen = 15;  // TODO: cambiarlo por el usuario logueado en el sistema
         //die(var_dump($_GET));
-        if ($id_grupo != -1)   // el mensaje se esta enviando a un grupo
+        if ($id_equipo != -1)   // el mensaje se esta enviando a un grupo
         {
             $Mensaje = New Mensaje(New \zfx\DB());
-            $id_mensaje = $Mensaje->crear($id_usuario_o,$mensajeText);           // primero creamos el mensaje
-            $lista_usuarios = $Mensaje->recuperarUsuariosGrupo($id_grupo);
-                foreach( $lista_usuarios as $l )
-                        $Mensaje->enlazarMensajeUsuario($id_mensaje,$l['id_usuario']);
+            $id_mensaje = $Mensaje->crear($id_origen,$mensajeText);           // primero creamos el mensaje
+            $lista_roles = $Mensaje->recuperarUsuariosEquipo($id_equipo);
+                foreach( $lista_roles as $l )
+                        $Mensaje->enlazarMensajeRol($id_mensaje,$l['id_rol']);
         }
-        if($id_usuario != -1)
+        if($id_rol != -1)
         {
             $Mensaje = New Mensaje(New \zfx\DB());
-            $id_mensaje = $Mensaje->crear($id_usuario_o, $mensajeText);    // creamos el mensaje
-            $Mensaje->enlazarMensajeUsuario($id_mensaje, $id_usuario);   // lo enlazamos a nuestro unico destinatario
+            $id_mensaje = $Mensaje->crear($id_oç, $mensajeText);    // creamos el mensaje
+            $Mensaje->enlazarMensajeRol($id_mensaje, $id_rol);   // lo enlazamos a nuestro unico destinatario
         }
         $this->_view->addSection('body','MensajeEnviado',array('mensaje'=>$mensajeText));
     }

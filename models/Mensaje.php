@@ -18,22 +18,12 @@ class  Mensaje
                 RETURNING id_mensaje";
                 return $this->db->qr($qry)['id_mensaje'];
      }
-   public function enlazarMensajeRol($id_mensaje, $id_Rol) //Enlaza un mensaje a un unico usuario
-     {
-            $qry = "
-            INSERT INTO rmu
-            (id_mensaje, id_usuario)
-            VALUES
-             ($id_mensaje, $id_usuario)";
-            $this->db->q($qry);
-     }
-    
-   public function recuperarUsuariosGrupo($id_grupo) //Recupera todos los usuarios que pertenecen a un grupo
+   
+   public function recuperarUsuariosEquipo($id_equipo) //Recupera todos los usuarios que pertenecen a un equipo
      {
         $qry = "
-          SELECT * FROM rug
+          SELECT * FROM roles
               NATURAL JOIN usuarios
-              NATURAL JOIN grupos
           WHERE id_grupo = $id_grupo";
         return $this->db->qa($qry);
      }

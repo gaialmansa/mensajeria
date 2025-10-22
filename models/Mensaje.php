@@ -4,21 +4,10 @@ class  Mensaje
 {
    public $db; //Acceso a base de datos
 
-   public function __construct($db)
+   public function __construct($db)    // constructor. Conexion a bd
      {
         $this->db = $db;
      }
-   public function crear($id_origen, $mensaje) //Crea un mensaje SIN enlazarlo con los usuarios destino. 
-     {
-                $timestamp = date('Y-m-d H:i:s', time());
-                $qry = "
-                INSERT INTO mensajes
-                (id_origen,  enviado, mensaje)
-                VALUES ($id_origen,'$timestamp', '$mensaje')
-                RETURNING id_mensaje";
-                return $this->db->qr($qry)['id_mensaje'];
-     }
-   
    public function recuperarUsuariosEquipo($id_equipo) //Recupera todos los usuarios que pertenecen a un equipo
      {
         $qry = "
@@ -28,7 +17,7 @@ class  Mensaje
         return $this->db->qa($qry);
      }
     
-   public function recuperar($id_usuario, $nmensajes, $offset) //Recupera n mensajes de un usuario a partir de un offset
+   public function recuperar($id_usuario, $nmensajes, $offset) //Recupera n mensajes de un usuario a partir de un offset. Hay que corregir todo
      {
         $qry = "
         SELECT uo.nombre AS origen,hora_edicion AS hora,mensaje, rmu.*
@@ -59,29 +48,8 @@ class  Mensaje
         return $listamensajes;
      }
     
-   public function recuperarPrimeroNoVisto($id_usuario) //Recupera el primer mensaje no visto de un usuario
-     {
-        $qry = "
-        SELECT uo.nombre AS origen,hora_edicion AS hora,mensaje, rmu.*
-        FROM rmu
-         NATURAL JOIN usuarios
-         NATURAL JOIN mensajes
-         JOIN usuarios uo ON mensajes.id_usuario_o = uo.id_usuario
-        WHERE rmu.id_usuario = $id_usuario AND NOT visto
-        ORDER BY hora_edicion ";
-        
-        return $this->db->qr($qry);
-     }
-   public function ver($id) //Marca un mensaje como visto
-     {
-        $timestamp = $fechaHora = date('Y-m-d H:i:s', time());
-        $qry = "
-        UPDATE rmu
-        SET visto = TRUE, hora_visto ='$timestamp' 
-        WHERE id = $id";
-        return $this->db->q($qry);
-     }
-   public function atender($id) //Marca un mensaje como atendido
+   
+   public function atender($id) //Marca un mensaje como atendido. TODO: corregir el query
      {
         $timestamp = $fechaHora = date('Y-m-d H:i:s', time());
         $qry = "
@@ -90,63 +58,7 @@ class  Mensaje
                 WHERE id = $id";
         return $this->db->q($qry);
      }
-   public function enviadosRecuperar($id_usuario, $numero) //Recupera los n ultimos mensajes enviados por un usuario
-     {
-        $qry = "
-        SELECT hora_edicion AS hora,mensaje, rmu.*
-        FROM rmu
-                NATURAL JOIN usuarios
-                NATURAL JOIN mensajes
-        WHERE mensajes.id_usuario_o = $id_usuario
-        ORDER BY hora DESC
-        LIMIT $numero";
-        return $this->db->qa($qry);
-     }
-   public function status($id_mensaje) //Recupera el estado del mensaje
-     {
-        $qry = "
-        SELECT visto, atendido,hora_visto, hora_atendido, nombre,id_mensaje FROM rmu
-            NATURAL JOIN mensajes
-            NATURAL JOIN usuarios 
-        WHERE id_mensaje = $id_mensaje
-        ";
-        return $this->db->qa($qry);
-     }
-   public function rnat($id_usuario)//Recupera los mensajes que se han dirigido al usuario y que no han sido atendidios por nadie
-     {
-      $qry = "
-      SELECT uo.nombre AS origen,hora_edicion AS hora,*
-         FROM mensajes 
-         NATURAL JOIN rmu 
-         JOIN usuarios uo ON mensajes.id_usuario_o = uo.id_usuario
-         WHERE rmu.id_usuario = $id_usuario
-         AND NOT EXISTS 
-         (
-            SELECT 1
-            FROM rmu
-            WHERE rmu.id_mensaje = mensajes.id_mensaje
-            AND atendido 
-         )";
-         return $this->db->qa($qry);
-      }
-   public function rpnat($id_usuario,$offset)//Recupera el primer mensaje que se ha dirigido al usuario y que aun no ha sido atendidio por nadie
-      {
-      $qry = "
-      SELECT uo.nombre AS origen,hora_edicion AS hora,*
-         FROM mensajes 
-         NATURAL JOIN rmu 
-         JOIN usuarios uo ON mensajes.id_usuario_o = uo.id_usuario
-         WHERE rmu.id_usuario = $id_usuario
-         AND NOT EXISTS 
-         (
-            SELECT 1
-            FROM rmu
-            WHERE rmu.id_mensaje = mensajes.id_mensaje
-            AND atendido 
-         )
-         ORDER BY hora_edicion LIMIT 1 OFFSET $offset";
-         return $this->db->qa($qry);
-      }
+   
    public function atendido($id_mensaje)  // devuelve verdadero cuando el mensaje ya ha sido atendido
       {
          $qry = "
@@ -158,17 +70,7 @@ class  Mensaje
             return $this->db->qr($qry); 
 
       }
-   public function leido($id_mensaje)  // devuelve verdadero cuando el mensaje ya ha sido atendido
-      {
-         $qry = "
-         SELECT id
-            FROM rmu 
-            WHERE id_mensaje = $id_mensaje
-             AND visto 
-            ";
-            return $this->db->qr($qry); 
-
-      }
+  
 
 
    }

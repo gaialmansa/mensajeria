@@ -82,7 +82,7 @@ class PgDB
         $str                .= ' user=' . a(a(Config::get('pg'), $profile), 'dbUser');
         $str                .= ' password=' . a(a(Config::get('pg'), $profile), 'dbPass');
         $str                .= ' options=\'--client_encoding=UTF8\'';
-        $this->resConn      = pg_connect($str);
+        $this->resConn      = pg_connect($str);        
         $this->lastRes      = NULL;
         $this->ignoreErrors = (bool)a(a(Config::get('pg'), $profile), 'ignoreErrors');
 

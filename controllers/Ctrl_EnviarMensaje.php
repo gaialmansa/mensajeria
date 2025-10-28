@@ -61,7 +61,7 @@ class Ctrl_EnviarMensaje extends Abs_AppController
         if($id_rol != -1)
         {
             $Mensaje = New Mensaje(New \zfx\DB());
-            $id_mensaje = $Mensaje->crear($id_oç, $mensajeText);    // creamos el mensaje
+            $id_mensaje = $Mensaje->crear($id_equipo=null, $id_destino,$id_origen, $mensajeText);    // creamos el mensaje
             $Mensaje->enlazarMensajeRol($id_mensaje, $id_rol);   // lo enlazamos a nuestro unico destinatario
         }
         $this->_view->addSection('body','MensajeEnviado',array('mensaje'=>$mensajeText));

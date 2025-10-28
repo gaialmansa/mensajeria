@@ -2,74 +2,47 @@
 
 class  Mensaje
 {
-   public $db; //Acceso a base de datos
+   public $userId,$db; //Usuario y Acceso a base de datos
 
-   public function __construct($db)    // constructor. Conexion a bd
+   public function __construct($db, $userId)    // constructor. Conexion a bd
      {
         $this->db = $db;
+        $this->userId = $userId;
      }
    public function recuperarUsuariosEquipo($id_equipo) //Recupera todos los usuarios que pertenecen a un equipo
      {
         $qry = "
           SELECT * FROM roles
-              NATURAL JOIN usuarios
-          WHERE id_grupo = $id_grupo";
+          WHERE id_equipo = $id_equipo";
         return $this->db->qa($qry);
      }
     
-   public function recuperar($id_usuario, $nmensajes, $offset) //Recupera n mensajes de un usuario a partir de un offset. Hay que corregir todo
+   public function recuperar($id_rol, $nmensajes, $offset) //Recupera n mensajes de un rol a partir de un offset. Hay que corregir todo
      {
         $qry = "
-        SELECT uo.nombre AS origen,hora_edicion AS hora,mensaje, rmu.*
-        FROM rmu
-                NATURAL JOIN usuarios
-                NATURAL JOIN mensajes
-                JOIN usuarios uo ON mensajes.id_usuario_o = uo.id_usuario
-        WHERE rmu.id_usuario = $id_usuario
-        ORDER BY hora_edicion DESC 
+        SELECT roles.nombre AS origen,enviado AS hora,mensaje,*
+        FROM mensajes
+                NATURAL JOIN roles
+        WHERE id_origen = $id_rol OR id_rol_dest = $id_rol
+        ORDER BY enviado DESC 
         LIMIT $nmensajes
         OFFSET $offset";
-        $listamensajes = $this->db->qa($qry);
-        
-        foreach ($listamensajes as &$m)
-        {
-        $idm = $m['id_mensaje'];
-        $qry = "
-                SELECT visto FROM rmu WHERE id_mensaje = $idm AND  NOT visto
-                ";      // este query devuelve resultados si hay algun destinatario que aun no haya visto el mensaje
-            $m['visto'] =  ! $this->db->qa($qry);
-
-            $qry = "
-                SELECT atendido FROM rmu WHERE id_mensaje = $idm AND  NOT atendido
-            ";      // este query devuelve resultados si hay algun destinatario que aun no haya atendido el mensaje
-            $m['atendido'] =  ! $this->db->qa($qry);
-            
-        }
-        return $listamensajes;
-     }
+        return $this->db->qa($qry);
+   }
     
    
-   public function atender($id) //Marca un mensaje como atendido. TODO: corregir el query
+   public function atender($id_mensaje) //Marca un mensaje como atendido. 
      {
         $timestamp = $fechaHora = date('Y-m-d H:i:s', time());
         $qry = "
-                UPDATE rmu
-                SET atendido = TRUE, hora_atendido ='$timestamp' 
-                WHERE id = $id";
+                UPDATE mensajes
+                SET atendido = T'$timestamp',
+                     id_user_atendido = $this->userId
+                WHERE id = $id_mensaje";
         return $this->db->q($qry);
      }
    
-   public function atendido($id_mensaje)  // devuelve verdadero cuando el mensaje ya ha sido atendido
-      {
-         $qry = "
-         SELECT id
-            FROM rmu 
-            WHERE id_mensaje = $id_mensaje
-             AND atendido 
-            ";
-            return $this->db->qr($qry); 
 
-      }
   
 
 

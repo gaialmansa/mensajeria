@@ -25,16 +25,15 @@ class Ctrl_Index extends Abs_AppController
             $this->_view->show();
             die;
         }
-        if ($this->_segment(0) == 'setrol') // El usuario ha seleccionado un rol (index/setrol/$rolId)
-        {
-            
-            $rolId = $this->_segment(1);    // argumento pasado en linea
-            $rol->setRol($userId, $rolId);  // Grabamos en BD
-            $this->_view->show();           // TODO: hay que pasar al controlador de envio de mensajes
-            die;
-        }
+       
+        
+        if ($this->_segment(0) == "chgrol")
+            $rol->unsetRol($userId);
+        if ($this->_segment(0) == "setrol")
+            $rol->setRol($userId, $this->_segment(1));  // Grabamos en BD el rol que viene como parametro
+        
 
-                
+        
         $this->rolId = $rol->getRolByUserId($userId);   // Buscamos si el usuario tiene algun rol asignado
         /**************************** SELECCION DE ROL **********************************/
         if (is_null($this->rolId ))                     // si no tiene ninguno hay que seleccionar el rol del usuario en curso

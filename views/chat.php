@@ -55,7 +55,7 @@ if (!empty($mensajes)) {
 
         <div class="menu-config">
             <a href="/index/chgrol" class="menu-link">Cambiar de Rol</a>
-            <a href="/index/chgpsw" class="menu-link">Cambiar de contraseña</a>
+            <a href="/cuenta-contrasena" class="menu-link">Cambiar de contraseña</a>
         </div>
         
         <hr class="separator-menu">
@@ -84,14 +84,19 @@ if (!empty($mensajes)) {
                         $atendido_html = '';
                         if ($es_atendido) {
                             $atendido_html = '<div class="atendido-info">';
-                            $atendido_html .= 'Atendido por: ' . htmlspecialchars($mensaje['user_atendido']) . '<br>';
+                            $atendido_html .= 'Atendido por: ' . htmlspecialchars($mensaje['useratt']) . '<br>';
                             $atendido_html .= 'a las ' . date('H:i', strtotime($mensaje['atendido']));
                             $atendido_html .= '</div>';
                         }
                     ?>
                     
                     <div class="par-burbuja">
-                        <?= htmlspecialchars($mensaje['nombre_par']) ?>
+                        <?php 
+                            if ($mensaje['enviado'] == 't')
+                                echo htmlspecialchars($mensaje['nombre_par']); 
+                            else
+                                echo htmlspecialchars($mensaje['nombre_de']);
+                         ?>
                         <?= $atendido_html ?>
                     </div>
                     
@@ -160,7 +165,7 @@ if (!empty($mensajes)) {
 </div>
 <div id="message-context-menu" class="context-menu" style="display:none;">
     <ul>
-        <li data-action="refresh">Actualizar estado (Clic simple)</li>
+        
         <li id="context-action-toggle">Marcar / Desmarcar como Atendido</li>
     </ul>
 </div>

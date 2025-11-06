@@ -27,47 +27,56 @@ $(document).ready(function() {
     }
 
     // Función para renderizar un mensaje individual
-    function renderMessage(mensaje) {
-        var isEnviado = mensaje.enviado;
-        var clasesFila = isEnviado ? 'enviado' : 'recibido';
-        var atendidoHtml = '';
-        var nombrePar = mensaje.nombre_par || (isEnviado ? 'Destinatario' : 'Remitente');
+function renderMessage(mensaje) {
+    // 🔑 Paso 1: Determinar si es enviado ('t' o true)
+    var isEnviado = (mensaje.enviado === true || mensaje.enviado === 't');
+    
+    var clasesFila = isEnviado ? 'enviado' : 'recibido';
+    var atendidoHtml = '';
 
-        if (mensaje.atendido) {
-            clasesFila += ' atendido';
-            
-            var dateObj = new Date(Date.parse(mensaje.atendido)); 
-            var atendidoTime = dateObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    // 🔑 Paso 2: Asignar el nombre basado en isEnviado
+    // Si es enviado (t), usa nombre_par (destinatario).
+    // Si NO es enviado (f), usa nombre_de (remitente).
+    var nombreMostrar = isEnviado ? mensaje.nombre_par : mensaje.nombre_de;
+    
+    // Si el nombre real es null/undefined, usa un fallback (Opcional, pero bueno tenerlo)
+    var nombrePar = nombreMostrar || (isEnviado ? 'Destinatario' : 'Remitente');
+    
+    // Si mensaje.atendido contiene una fecha (es truthy), se aplica la clase 'atendido'
+    if (mensaje.atendido) {
+        clasesFila += ' atendido';
+        
+        var dateObj = new Date(Date.parse(mensaje.atendido)); 
+        var atendidoTime = dateObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
-            atendidoHtml = `
-                <div class="atendido-info">
-                    Atendido por: ${mensaje.user_atendido}<br>
-                    a las ${atendidoTime}
-                </div>
-            `;
-        }
-
-        var mensajeTime = new Date(Date.parse(mensaje.fecha)).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-
-        var mensajeHtml = `
-            <div class="mensaje-fila ${clasesFila}" data-msg-id="${mensaje.id}">
-                <div class="par-burbuja">
-                    ${nombrePar}
-                    ${atendidoHtml}
-                </div>
-                <div class="mensaje-burbuja">
-                    <p>${mensaje.contenido}</p>
-                    <span class="mensaje-fecha">${mensajeTime}</span>
-                </div>
+        atendidoHtml = `
+            <div class="atendido-info">
+                Atendido por: ${mensaje.useratt}<br>  a las ${atendidoTime}
             </div>
         `;
-
-        return mensajeHtml; 
     }
+
+    var mensajeTime = new Date(Date.parse(mensaje.fecha)).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+    var mensajeHtml = `
+        <div class="mensaje-fila ${clasesFila}" data-msg-id="${mensaje.id}">
+            <div class="par-burbuja">
+                ${nombrePar}
+                ${atendidoHtml}
+            </div>
+            <div class="mensaje-burbuja">
+                <p>${mensaje.contenido}</p>
+                <span class="mensaje-fecha">${mensajeTime}</span>
+            </div>
+        </div>
+    `;
+
+    return mensajeHtml; 
+}
 
     // Función para manejar la actualización de un mensaje dado su ID
     function updateMessageHtml(msgId, $msgElement, dataToSend) {
-        $msgElement.css('opacity', '0.6');
+        $msgElement.addClass('processing-update');
 
         $.ajax({
             url: 'api2/msgatender',
@@ -76,14 +85,17 @@ $(document).ready(function() {
             data: JSON.stringify(dataToSend), 
             success: function(response) {
                 var nuevoMensaje = (typeof response === 'string') ? JSON.parse(response) : response;
-                
-                if (nuevoMensaje && nuevoMensaje.id === msgId) {
+                //alert(msgId === nuevoMensaje.id);
+                if (nuevoMensaje && parseInt(nuevoMensaje.id) === parseInt(msgId)) {
                     var nuevoHtml = renderMessage(nuevoMensaje);
                     var $newElement = $(nuevoHtml);
+                    
+                    // Al reemplazar el elemento, el nuevo elemento ya NO tendrá la clase 'processing-update'
+                    // y tampoco tendrá el estilo de opacidad, pero sí las clases 'atendido' o 'recibido' correctas.
                     $msgElement.replaceWith($newElement);
                     
-                    bindMessageClickEvents(); 
-                    
+                    // Ya que hemos reemplazado el elemento, es necesario reasignar los eventos
+                    bindMessageClickEvents();
                 } else {
                      console.warn("Respuesta de actualización inesperada para ID:", msgId);
                 }
@@ -117,10 +129,7 @@ $(document).ready(function() {
 
                 e.stopPropagation(); // Detiene la propagación del evento 'contextmenu'
 
-                   $currentMsgId = $(this).data('msg-id');  // ← Cambia esta línea
-    
-                   console.log('🟢 Contextmenu - currentMsgId establecido a:', $currentMsgId);
-    
+                   $currentMsgId = $(this).data('msg-id');      
                     var isAtendido = $msgElement.hasClass('atendido');
                     var esRecibido = $msgElement.hasClass('recibido');
 
@@ -149,7 +158,6 @@ $(document).ready(function() {
         $contextMenu.hide();
         
         if ($currentMsgId !== null) {
-            console.log('🟡 Document click - reseteando $currentMsgId a null. Antes era:', $currentMsgId);
             $currentMsgId = null;
         }
     }
@@ -160,10 +168,9 @@ $(document).ready(function() {
 
     e.stopPropagation(); 
     
- console.log('🔴 Click en menú - $currentMsgId:', $currentMsgId);
     
     if (!$currentMsgId) {
-        console.log('❌ $currentMsgId es null - abortando');
+        
         return;
     }
 
@@ -176,19 +183,19 @@ $(document).ready(function() {
         action: isCurrentlyAtendido ? 'desatender' : 'atender'
     };
     
-    console.log('🔴 Enviando datos:', datosAtender);
+    
     updateMessageHtml($currentMsgId, $msgElement, datosAtender);
 
 
     $contextMenu.hide();
-     console.log('🟢 Acción completada - reseteando $currentMsgId a null');
+    
     $currentMsgId = null;
 });
 
 // También para el otro botón del menú:
 $(document).on('click', '[data-action="refresh"]', function(e) {
     e.stopPropagation();
-    console.log('🔴 Click en Actualizar Estado');
+    
     
     if (!$currentMsgId) return;
     

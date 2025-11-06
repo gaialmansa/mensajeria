@@ -21,37 +21,74 @@ class  Mensaje
      {
       
         $qry = "
-        SELECT id_mensaje as id, mensaje AS contenido,enviado AS fecha,(mensajes.id_origen = $id_rol) AS enviado, roles.nombre||'('||login||')' AS nombre_par,
-               atendido 
-        FROM mensajes
-           JOIN roles ON id_rol = id_origen OR id_rol = id_rol_dest
-           JOIN equipos ON id_equipo_dest = equipos.id_equipo
-           JOIN zfx_user ON roles.current = zfx_user.id
+          SELECT  id_mensaje as id,
+                  mensaje AS contenido, 
+                  enviado AS fecha, 
+                  (mensajes.id_origen = $id_rol) AS enviado,
+                  CONCAT(equipos.nombre,destino.nombre) AS nombre_par, 
+                  atendido,
+                  CONCAT( origen.nombre,'(',user_origen.login,')') AS nombre_de,
+                  att.nombre AS useratt
+          FROM mensajes 
+              JOIN roles AS origen ON origen.id_rol = id_origen 
+              LEFT JOIN roles AS destino ON destino.id_rol = id_rol_dest 
+              LEFT JOIN equipos ON id_equipo_dest = equipos.id_equipo 
+              JOIN zfx_user AS user_origen ON origen.current = user_origen.id 
+              LEFT JOIN zfx_user AS user_destino ON destino.current = user_destino.id
+              LEFT JOIN roles AS att ON att.id_rol = id_rol_atendido
               
-        WHERE id_origen = $id_rol OR id_rol_dest = $id_rol OR id_equipo_dest = $id_equipo
-        ORDER BY fecha ASC 
-        LIMIT $nmensajes
-        OFFSET $offset";
+          WHERE id_origen = $id_rol OR id_rol_dest = $id_rol OR id_equipo_dest = $id_equipo
+          ORDER BY fecha ASC 
+          LIMIT $nmensajes
+          OFFSET $offset";
+       //die($qry);
         return $this->db->qa($qry);
      }
-    
-   public function atender($accion, $id_mensaje, $userId)
+   
+   public function recuperarById($id_mensaje,$id_rol) //Recupera un único mensaje
+     {
+
+      
+        $qry = "
+          SELECT  id_mensaje as id,
+                  mensaje AS contenido, 
+                  enviado AS fecha, 
+                  (mensajes.id_origen = $id_rol) AS enviado,
+                  CONCAT(equipos.nombre,destino.nombre) AS nombre_par, 
+                  atendido,
+                  CONCAT( origen.nombre,'(',user_origen.login,')') AS nombre_de,
+                  att.nombre AS useratt
+          FROM mensajes 
+              JOIN roles AS origen ON origen.id_rol = id_origen 
+              LEFT JOIN roles AS destino ON destino.id_rol = id_rol_dest 
+              LEFT JOIN equipos ON id_equipo_dest = equipos.id_equipo 
+              JOIN zfx_user AS user_origen ON origen.current = user_origen.id 
+              LEFT JOIN zfx_user AS user_destino ON destino.current = user_destino.id
+              LEFT JOIN roles AS att ON att.id_rol = id_rol_atendido
+              
+          WHERE id_mensaje = $id_mensaje";
+       //die($qry);
+        return $this->db->qa($qry);
+     }
+   
+     public function atender($accion, $id_mensaje, $userId)
      {
       $rol = New Rol($this->db);
       $rolUser = $rol->getRolByUserId($userId);
       if ($accion == 'atender')
         {
         $qry = "
-        UPDATE mensajes SET atendido = now(), id_user_atendido = {$rolUser['id_rol']}
+        UPDATE mensajes SET atendido = now(), id_rol_atendido = {$rolUser['id_rol']}
         WHERE id_mensaje = $id_mensaje
           ";
         }
       if ($accion == 'desatender')
         {
-        $qry = "UPDATE mensajes SET atendido = NULL, id_user_atendido = NULL WHERE id_mensaje = $id_mensaje";  
+        $qry = "UPDATE mensajes SET atendido = NULL, id_rol_atendido = NULL WHERE id_mensaje = $id_mensaje";  
         }
+      //echo $qry;
       $this->db->qa($qry);
-      return $rolUser['nombre'];
+      return $this->recuperarById($id_mensaje,$rolUser['id_rol'])[0];
      }
 
    public function crear($id_origen,$id_equipo_dest, $id_rol_dest,$mensaje)

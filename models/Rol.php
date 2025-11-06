@@ -45,7 +45,7 @@ class Rol
                WHERE id_equipo = $id_equipo";
       return $this->db->qa($qry)[0]['nombre'];
      }
-   public function getTeamByRolId($id_rol)
+    public function getTeamByRolId($id_rol)
      {
       $qry = "
                SELECT roles.id_equipo 
@@ -106,6 +106,14 @@ class Rol
                   ";
          return $this->db->qa($qry);
      }
- 
+    public function unsetRol($userId)
+      {
+           $qry = "
+                  UPDATE roles
+                     SET current = null
+                  WHERE current = $userId
+                  ";
+         return $this->db->qa($qry);
+      }
 
 }

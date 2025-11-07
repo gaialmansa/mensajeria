@@ -46,12 +46,14 @@ class Ctrl_Index extends Abs_AppController
         else    /********************************** MENSAJERIA ***************************/
         {
             $mensaje = New Mensaje($this->db, $userId);             // instanciamos la mensajeria
-            $data = array();                                // array para pasar a la vista
+            $data = array();                                        // array para pasar a la vista
             $data['roles'] = $rol->getListaRolesEnviar($userId);    // Lista de roles a los que el usuario puede enviar
             $data['equipos'] = $rol->getListaEquiposEnviar($userId);// Lista de equipos e los que user puede enviar un mensaje
-            $data['rolId'] = $this->rolId['id_rol'];                 // El identificador de rol 
-            $data['userId'] = $userId;                     // El id del usuario 
-            $equipoId = $rol->getTeamByRolId($this->rolId['id_rol']);    // El id del equipo al que pertenece el usuario
+            $data['rolId'] = $this->rolId['id_rol'];                // El identificador de rol 
+            $data['rolname'] = $this->rolId['nombre'];              // El nombre de rol 
+            $data['userId'] = $userId;                              // El id del usuario 
+            $equipoId = $rol->getTeamByRolId($this->rolId['id_rol']);// El id del equipo al que pertenece el usuario
+            $data['usr'] = $user->getLogin();               // El usuario en el sistema
             $data['mensajes'] = $mensaje->recuperar($this->rolId['id_rol'],$equipoId); // recuperamos la lista de los mensajes dirigidos a este rol
 //die(var_dump($data));            
             $this->_view = new View('chat',$data);      // lanzamos la vista

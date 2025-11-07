@@ -50,14 +50,17 @@ if (!empty($mensajes)) {
         <div class="logo-container">
             <img src="/res/img/logo.svg" alt="Logo Mensajería" class="logo-chat">
         </div>
-        
+        <div class="menu-config">
+            <?= $usr ?><br>
+            <?= $rolname ?> 
+        </div>
         <hr class="separator-menu">
 
         <div class="menu-config">
             <a href="/index/chgrol" class="menu-link">Cambiar de Rol</a>
             <a href="/cuenta-contrasena" class="menu-link">Cambiar de contraseña</a>
         </div>
-        
+
         <hr class="separator-menu">
 
         <div class="logout-container">

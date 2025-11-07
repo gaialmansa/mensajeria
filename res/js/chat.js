@@ -79,7 +79,7 @@ function renderMessage(mensaje) {
         $msgElement.addClass('processing-update');
 
         $.ajax({
-            url: 'api2/msgatender',
+            url: '/api2/msgatender',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(dataToSend), 

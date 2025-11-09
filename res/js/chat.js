@@ -252,12 +252,12 @@ function renderMessage(mensaje) {
                 $mensajesCuerpo.scrollTop($mensajesCuerpo.prop("scrollHeight"));
             }
             
-            setTimeout(pollNewMessages, 3000); 
+            setTimeout(pollNewMessages, 1000); 
         },
         error: function(xhr) {
             console.error("Error en la consulta AJAX de mensajes:", xhr.status, xhr.responseText);
             
-            setTimeout(pollNewMessages, 3000); 
+            setTimeout(pollNewMessages, 1000); 
         }
     });
 }

@@ -17,7 +17,7 @@ $pofemenu = array(
     'sections' => array(
         'pofemenu-tablas' => array(
             'es'          => array('Mensajería - Administración', '<i class="fas fa-comments"></i> '),
-            'perm'        => '',
+            'perm'        => 'administracion_mensajeria',
             'subsections' => array
             (
                 'pofemenu-tablas-roles' => array(

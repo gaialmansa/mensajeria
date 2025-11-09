@@ -81,3 +81,14 @@ class Ctrl_Index extends Abs_AppController
     // --------------------------------------------------------------------
 
 }
+
+//Fatal error: Uncaught TypeError: array_keys(): Argument #1 ($array) must be of type array, null given in 
+//var/www/html/msg/models/pg/User.php:540 Stack trace: #0 /var/www/html/msg/models/pg/User.php(540): array_keys() 
+#1 /var/www/html/msg/views/zaf/zth1/section-menu.php(25): User->getPermissions() 
+#2 /var/www/html/msg/base/zfx/core/View.php(301): require('...') 
+#3 /var/www/html/msg/base/zfx/core/View.php(274): zfx\View->showSection() 
+#4 /var/www/html/msg/views/zaf/zth1/page-base.php(43): zfx\View->section() 
+#5 /var/www/html/msg/base/zfx/core/View.php(213): require('...') 
+#6 /var/www/html/msg/controllers/Ctrl_CuentaContrasena.php(54): zfx\View->show() 
+#7 /var/www/html/msg/index.php(203): Ctrl_CuentaContrasena->_main() 
+#8 {main} thrown in /var/www/html/msg/models/pg/User.php on line 540

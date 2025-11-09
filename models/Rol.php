@@ -116,4 +116,13 @@ class Rol
          return $this->db->qa($qry);
       }
 
+   public function getTeamFromMac($mac)
+      {
+         $qry = "
+               SELECT id_equipo 
+               FROM esp
+               WHERE mac = '$mac'
+                        ";
+         return $this->db->qa($qry)[0]['id_equipo'];
+      }
 }

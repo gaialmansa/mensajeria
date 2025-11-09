@@ -2,14 +2,14 @@
 
 class  Mensaje
 {
-   public $userId,$db; //Usuario y Acceso a base de datos
+  public $userId,$db; //Usuario y Acceso a base de datos
 
-   public function __construct($db, $userId)    // constructor. Conexion a bd
+  public function __construct($db, $userId)                               // constructor. Conexion a bd
      {
         $this->db = $db;
         $this->userId = $userId;
      }
-   public function recuperarUsuariosEquipo($id_equipo) //Recupera todos los usuarios que pertenecen a un equipo
+  public function recuperarUsuariosEquipo($id_equipo)                     //Recupera todos los usuarios que pertenecen a un equipo
      {
         $qry = "
           SELECT * FROM roles
@@ -17,7 +17,7 @@ class  Mensaje
         return $this->db->qa($qry);
      }
     
-   public function recuperar($id_rol,$id_equipo, $nmensajes=50, $offset=0) //Recupera n mensajes de un rol a partir de un offset. Por defecto, toma los ultimos 50 mensajes
+  public function recuperar($id_rol,$id_equipo,$lastId = 0) //Recupera n mensajes de un rol a partir de un offset. Por defecto, toma los ultimos 50 mensajes
      {
       
         $qry = "
@@ -37,15 +37,15 @@ class  Mensaje
               LEFT JOIN zfx_user AS user_destino ON destino.current = user_destino.id
               LEFT JOIN roles AS att ON att.id_rol = id_rol_atendido
               
-          WHERE id_origen = $id_rol OR id_rol_dest = $id_rol OR id_equipo_dest = $id_equipo
-          ORDER BY fecha ASC 
-          LIMIT $nmensajes
-          OFFSET $offset";
+          WHERE (id_origen = $id_rol OR id_rol_dest = $id_rol OR id_equipo_dest = $id_equipo ) 
+               AND id_mensaje > $lastId
+          ORDER BY fecha ASC ";
+          
        //die($qry);
         return $this->db->qa($qry);
      }
    
-   public function recuperarById($id_mensaje,$id_rol) //Recupera un único mensaje
+  public function recuperarById($id_mensaje,$id_rol=0)                      //Recupera un único mensaje
      {
 
       
@@ -54,6 +54,7 @@ class  Mensaje
                   mensaje AS contenido, 
                   enviado AS fecha, 
                   (mensajes.id_origen = $id_rol) AS enviado,
+                  id_origen AS id_de,
                   CONCAT(equipos.nombre,destino.nombre) AS nombre_par, 
                   atendido,
                   CONCAT( origen.nombre,'(',user_origen.login,')') AS nombre_de,
@@ -70,8 +71,27 @@ class  Mensaje
        //die($qry);
         return $this->db->qa($qry);
      }
-   
-     public function atender($accion, $id_mensaje, $userId)
+  
+  public function actualizar($listaMensajes)
+   {
+      $resp = array();                        // array para la respuesta
+      foreach($listaMensajes as $msg)         // iteramos sobre la lista
+         {
+            $current = $this->recuperarById($msg['id'])['0'];    // recuperamos el mensaje de la base de datos
+            if((is_null($current['atendido']) and $msg['atendido'] == 't') or
+             ( !is_null($current['atendido']) and $msg['atendido'] == 'f'))     // hay cambios
+               $resp[] = $current;
+         }
+      //   die();
+      return $resp;
+   }
+  public function getLater($lastId,$rolId)   // devuelve los mensajes para el rol indicado posteriores al id especificado
+  {
+   $rol = new Rol($this->db);
+   $id_equipo = $rol->getTeamByRolId($rolId);
+   return $this->recuperar($rolId, $id_equipo,$lastId);
+  }
+  public function atender($accion, $id_mensaje, $userId)                  //Marca un mensaje como atendido
      {
       $rol = New Rol($this->db);
       $rolUser = $rol->getRolByUserId($userId);
@@ -91,7 +111,23 @@ class  Mensaje
       return $this->recuperarById($id_mensaje,$rolUser['id_rol'])[0];
      }
 
-   public function crear($id_origen,$id_equipo_dest, $id_rol_dest,$mensaje)
+  public function haymsg($id_equipo)                                      // devuelve verdadero si hay mensajes para el equipo o algun rol del equipo
+   {
+      $qry = "
+            SELECT id_mensaje
+            FROM mensajes
+               LEFT JOIN roles ON id_rol_dest = roles.id_rol
+               LEFT JOIN equipos ON roles.id_equipo = equipos.id_equipo OR id_equipo_dest = equipos.id_equipo
+            WHERE equipos.id_equipo = $id_equipo AND atendido IS NULL
+      ";
+      $ret = $this->db->qa($qry);       // returna true cuando hay algun mensaje
+      return $ret;
+   }
+  
+  
+  
+
+  public function crear($id_origen,$id_equipo_dest, $id_rol_dest,$mensaje)//Crea un mensaje nuevo (fuera de uso)
      {
       $rol = New Rol($this->db);
       $ret = array('destinatario'=> '',
@@ -115,8 +151,4 @@ class  Mensaje
         $ret['id_mensaje'] = $this->db->qa($qry)[0]['id_mensaje'];
         return $ret;
      }
-
-  
-
-
-   }
+}

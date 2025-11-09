@@ -13,10 +13,6 @@ $(document).ready(function() {
     var $contextToggleAction = $('#context-action-toggle');
     var $currentMsgId = null; 
 
-    // Asume que currentUserId está inyectado desde PHP (ver chat_view.php)
-    // Usaremos la variable global inyectada en el HTML.
-    // var currentUserId; // Ya está disponible si se inyectó correctamente
-
     var lastMsgId = parseInt($chatContainer.data('last-msg-id')) || 0;
 
     // --- Funciones de Control ---
@@ -26,20 +22,28 @@ $(document).ready(function() {
         $botonEnviar.prop('disabled', !destinatarioSeleccionado);
     }
 
-    // Función para renderizar un mensaje individual
+   // Función para renderizar un mensaje individual
 function renderMessage(mensaje) {
-    // 🔑 Paso 1: Determinar si es enviado ('t' o true)
-    var isEnviado = (mensaje.enviado === true || mensaje.enviado === 't');
+    var isEnviado;
+
+    // 1. Lógica robusta para mensajes que vienen del servidor (polling/actualizaciones)
+    //    Si mensaje.id_de tiene un valor, lo usamos para la comparación segura.
+    if (mensaje.id_de !== undefined && mensaje.id_de !== null) {
+        isEnviado = (parseInt(mensaje.id_de) === parseInt(ID_REMITENTE));
+    } else {
+        // 2. Lógica de respaldo (fallback) para mensajes creados localmente
+        //    Si falta id_de, asumimos que el mensaje es localmente enviado 
+        //    si tiene la bandera 'enviado' (t/true).
+        isEnviado = (mensaje.enviado === true || mensaje.enviado === 't');
+    }
+    
+    // --- El resto del código se mantiene igual ---
     
     var clasesFila = isEnviado ? 'enviado' : 'recibido';
     var atendidoHtml = '';
 
-    // 🔑 Paso 2: Asignar el nombre basado en isEnviado
-    // Si es enviado (t), usa nombre_par (destinatario).
-    // Si NO es enviado (f), usa nombre_de (remitente).
+    // Asignar el nombre
     var nombreMostrar = isEnviado ? mensaje.nombre_par : mensaje.nombre_de;
-    
-    // Si el nombre real es null/undefined, usa un fallback (Opcional, pero bueno tenerlo)
     var nombrePar = nombreMostrar || (isEnviado ? 'Destinatario' : 'Remitente');
     
     // Si mensaje.atendido contiene una fecha (es truthy), se aplica la clase 'atendido'
@@ -73,7 +77,6 @@ function renderMessage(mensaje) {
 
     return mensajeHtml; 
 }
-
     // Función para manejar la actualización de un mensaje dado su ID
     function updateMessageHtml(msgId, $msgElement, dataToSend) {
         $msgElement.addClass('processing-update');
@@ -85,17 +88,12 @@ function renderMessage(mensaje) {
             data: JSON.stringify(dataToSend), 
             success: function(response) {
                 var nuevoMensaje = (typeof response === 'string') ? JSON.parse(response) : response;
-                //alert(msgId === nuevoMensaje.id);
+                
                 if (nuevoMensaje && parseInt(nuevoMensaje.id) === parseInt(msgId)) {
                     var nuevoHtml = renderMessage(nuevoMensaje);
                     var $newElement = $(nuevoHtml);
                     
-                    // Al reemplazar el elemento, el nuevo elemento ya NO tendrá la clase 'processing-update'
-                    // y tampoco tendrá el estilo de opacidad, pero sí las clases 'atendido' o 'recibido' correctas.
                     $msgElement.replaceWith($newElement);
-                    
-                    // Ya que hemos reemplazado el elemento, es necesario reasignar los eventos
-                    bindMessageClickEvents();
                 } else {
                      console.warn("Respuesta de actualización inesperada para ID:", msgId);
                 }
@@ -104,151 +102,176 @@ function renderMessage(mensaje) {
                 console.error("Error al actualizar el mensaje:", xhr.status, xhr.responseText);
             },
             complete: function() {
-                // No es necesario restaurar opacidad aquí, ya se reemplazó el elemento
+                $('.mensaje-fila[data-msg-id="' + msgId + '"]').removeClass('processing-update');
             }
         });
     }
 
     /**
-     * Añade los event listeners (clic simple y clic derecho) a los mensajes.
+     * Función unificada para mostrar el menú contextual.
      */
-    function bindMessageClickEvents() {
-        $('.mensaje-fila').not('.bound').each(function() {
-            var $msgElement = $(this);
-            var msgId = $msgElement.data('msg-id');
-            $msgElement.addClass('bound'); 
-            
-            // 1. Evento de Clic Simple (Actualización de estado general)
-            $msgElement.on('click', function() {
-                updateMessageHtml(msgId, $msgElement, { id_mensaje: msgId });
-            });
-            
-            // 2. Evento de CLIC DERECHO (Mostrar menú contextual)
-            $msgElement.on('contextmenu', function(e) {
-                e.preventDefault(); 
+    function showContextMenu($msgElement, e) {
+        $currentMsgId = $msgElement.data('msg-id'); 
 
-                e.stopPropagation(); // Detiene la propagación del evento 'contextmenu'
+        var isAtendido = $msgElement.hasClass('atendido');
+        var esRecibido = $msgElement.hasClass('recibido');
 
-                   $currentMsgId = $(this).data('msg-id');      
-                    var isAtendido = $msgElement.hasClass('atendido');
-                    var esRecibido = $msgElement.hasClass('recibido');
+        if (esRecibido) {
+            $contextToggleAction.text(isAtendido ? '❌ Desmarcar como Atendido' : '✅ Marcar como Atendido');
+            $contextToggleAction.show();
+        } else {
+            $contextToggleAction.hide();
+        }
 
-                    if (esRecibido) {
-                        $contextToggleAction.text(isAtendido ? '❌ Desmarcar como Atendido' : '✅ Marcar como Atendido');
-                        $contextToggleAction.show();
-                    } else {
-                        $contextToggleAction.hide();
-                    }
-    
-    $contextMenu.css({
-        top: e.pageY + 'px',
-        left: e.pageX + 'px'
-    }).show();
-            });
-        });
+        $contextMenu.css({
+            top: e.pageY + 'px',
+            left: e.pageX + 'px'
+        }).show();
     }
     
-    // --- Lógica del Menú Contextual ---
+    // --- LÓGICA DE EVENTOS DELEGADOS ---
+
+    // 1. CLIC SIMPLE (Escritorio/Móvil) para abrir el Menú Contextual
+    $mensajesCuerpo.on('click', '.mensaje-fila', function(e) {
+        e.preventDefault(); 
+        e.stopPropagation();
+        
+        showContextMenu($(this), e); 
+    });
+
+    // 2. CLIC DERECHO (Escritorio) para abrir el Menú Contextual
+    $mensajesCuerpo.on('contextmenu', '.mensaje-fila', function(e) {
+        e.preventDefault(); 
+        e.stopPropagation();
+        
+        showContextMenu($(this), e); 
+    });
+
+    // --- Lógica del Menú Contextual (Acciones) ---
 
     // Ocultar menú al hacer clic fuera
-
     $(document).on('click', function(e) { 
-    // Si el clic NO fue dentro del menú contextual, lo ocultamos y reseteamos.
-    if (!$(e.target).closest('#message-context-menu').length) {
-        $contextMenu.hide();
-        
-        if ($currentMsgId !== null) {
-            $currentMsgId = null;
+        if (!$(e.target).closest('#message-context-menu').length) {
+            $contextMenu.hide();
+            if ($currentMsgId !== null) {
+                $currentMsgId = null;
+            }
         }
-    }
-});
+    });
 
+    // Acción de Marcar/Desmarcar como Atendido
     $(document).on('click', '#context-action-toggle', function(e) {
-
-
-    e.stopPropagation(); 
-    
-    
-    if (!$currentMsgId) {
+        e.stopPropagation(); 
         
-        return;
-    }
+        if (!$currentMsgId) return;
 
-    var $msgElement = $('.mensaje-fila[data-msg-id="' + $currentMsgId + '"]');
-    var isCurrentlyAtendido = $msgElement.hasClass('atendido');
+        var $msgElement = $('.mensaje-fila[data-msg-id="' + $currentMsgId + '"]');
+        var isCurrentlyAtendido = $msgElement.hasClass('atendido');
 
-    var datosAtender = { 
-        id_mensaje: $currentMsgId,
-        user_id: currentUserId, 
-        action: isCurrentlyAtendido ? 'desatender' : 'atender'
-    };
-    
-    
-    updateMessageHtml($currentMsgId, $msgElement, datosAtender);
+        var datosAtender = { 
+            id_mensaje: $currentMsgId,
+            user_id: currentUserId, 
+            action: isCurrentlyAtendido ? 'desatender' : 'atender'
+        };
+        
+        updateMessageHtml($currentMsgId, $msgElement, datosAtender);
 
+        $contextMenu.hide();
+        $currentMsgId = null;
+    });
 
-    $contextMenu.hide();
-    
-    $currentMsgId = null;
-});
-
-// También para el otro botón del menú:
-$(document).on('click', '[data-action="refresh"]', function(e) {
-    e.stopPropagation();
-    
-    
-    if (!$currentMsgId) return;
-    
-    var $msgElement = $('.mensaje-fila[data-msg-id="' + $currentMsgId + '"]');
-    updateMessageHtml($currentMsgId, $msgElement, { id_mensaje: $currentMsgId });
-    
-    $contextMenu.hide();
-    $currentMsgId = null;
-});
-
+    // Acción de Refrescar Estado (Manual)
+    $(document).on('click', '[data-action="refresh"]', function(e) { 
+        e.stopPropagation();
+        
+        if (!$currentMsgId) return;
+        
+        var $msgElement = $('.mensaje-fila[data-msg-id="' + $currentMsgId + '"]');
+        updateMessageHtml($currentMsgId, $msgElement, { id_mensaje: $currentMsgId });
+        
+        $contextMenu.hide();
+        $currentMsgId = null;
+    });
+ 
 
     // --- Polling (Consulta Periódica) ---
 
     function pollNewMessages() {
-        $.ajax({
-            url: '/index/getnewmsg',
-            type: 'POST',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', 
-            data: { lastMsgId: lastMsgId },
-            success: function(response) {
-                var mensajesNuevos = (typeof response === 'string') ? JSON.parse(response) : response;
-                
-                if (mensajesNuevos && mensajesNuevos.length > 0) {
-                    mensajesNuevos.forEach(function(mensaje) {
-                        $mensajesCuerpo.append(renderMessage(mensaje));
-                    });
+    
+    var visibleMsgsStatus = $('.mensaje-fila').map(function() {
+        var $msgElement = $(this);
+        var isAtendido = $msgElement.hasClass('atendido');
+        
+        return {
+            id: $msgElement.data('msg-id'),
+            atendido: isAtendido ? 't' : 'f' 
+        };
+    }).get();
 
-                    lastMsgId = mensajesNuevos[mensajesNuevos.length - 1].id;
-                    $mensajesCuerpo.scrollTop($mensajesCuerpo.prop("scrollHeight"));
+    var dataToSend = { 
+        lastMsgId: lastMsgId,
+        visibleMsgsStatus: visibleMsgsStatus,
+        // 🔑 CAMBIO CLAVE: Incluir la ID del rol (ID_REMITENTE)
+        rolId: ID_REMITENTE
+    };
+
+    $.ajax({
+        url: '/api2/getnewmsg',
+        type: 'POST',
+        contentType: 'application/json', 
+        data: JSON.stringify(dataToSend),
+        success: function(response) {
+            // ... (Lógica de procesamiento de la respuesta) ...
+
+            var datos = (typeof response === 'string') ? JSON.parse(response) : response;
+            
+            var mensajesNuevos = datos.nuevos || [];
+            var mensajesActualizados = datos.actualizados || [];
+            
+            // ... (Lógica de actualización de DOM) ...
+
+            if (mensajesActualizados.length > 0) {
+                mensajesActualizados.forEach(function(mensaje) {
+                    var msgId = mensaje.id;
+                    var $msgElement = $('.mensaje-fila[data-msg-id="' + msgId + '"]');
                     
-                    bindMessageClickEvents(); 
-                }
-            },
-            error: function(xhr) {
-                console.error("Error en la consulta AJAX de mensajes nuevos:", xhr.status, xhr.responseText);
-            },
-            complete: function() {
-                setTimeout(pollNewMessages, 3000);
+                    if ($msgElement.length) {
+                        var nuevoHtml = renderMessage(mensaje);
+                        var $newElement = $(nuevoHtml);
+                        $msgElement.replaceWith($newElement);
+                    }
+                });
             }
-        });
-    }
+
+            if (mensajesNuevos.length > 0) {
+                mensajesNuevos.forEach(function(mensaje) {
+                    $mensajesCuerpo.append(renderMessage(mensaje));
+                });
+
+                lastMsgId = mensajesNuevos[mensajesNuevos.length - 1].id;
+                $mensajesCuerpo.scrollTop($mensajesCuerpo.prop("scrollHeight"));
+            }
+            
+            setTimeout(pollNewMessages, 3000); 
+        },
+        error: function(xhr) {
+            console.error("Error en la consulta AJAX de mensajes:", xhr.status, xhr.responseText);
+            
+            setTimeout(pollNewMessages, 3000); 
+        }
+    });
+}
 
     // --- Inicialización y Eventos ---
 
-    // Scroll inicial y atado de eventos a mensajes iniciales
+    // Scroll inicial
     if ($mensajesCuerpo.length) {
         $mensajesCuerpo.scrollTop($mensajesCuerpo.prop("scrollHeight"));
     }
     checkDestinatario();
-    bindMessageClickEvents(); 
-
-    // Iniciar el polling
-    setTimeout(pollNewMessages, 3000);
+    
+    // 🔑 INICIAR EL POLLING INMEDIATAMENTE: Ejecutamos la función directamente.
+    pollNewMessages(); 
     
     // Lógica para selección única de destinatario
     $checkboxes.on('change', function() {
@@ -293,7 +316,6 @@ $(document).on('click', '[data-action="refresh"]', function(e) {
         e.preventDefault(); 
 
         var $form = $(this);
-        //var idRemitente = $form.find('input[name="id_remitente"]').val();
         var mensajeContenido = $inputMensaje.val().trim();
         var $destinatarioSeleccionado = $checkboxes.filter(':checked');
 
@@ -301,11 +323,10 @@ $(document).on('click', '[data-action="refresh"]', function(e) {
             alert("Error de validación.");
             return;
         }
-        // Inicializamos a null
+        
         var id_rol = null;
         var id_team = null;
 
-        // Verifica manualmente cada checkbox
         $('input[name="id_rol"]').each(function(index) {
         if ($(this).is(':checked')) {
             id_rol = $(this).val();
@@ -327,7 +348,7 @@ $(document).on('click', '[data-action="refresh"]', function(e) {
         $botonEnviar.prop('disabled', true).text('Enviando...');
 
         $.ajax({
-            url: 'api2/mensaje',
+            url: '/api2/mensaje',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(datosAEnviar),
@@ -349,7 +370,6 @@ $(document).on('click', '[data-action="refresh"]', function(e) {
                 lastMsgId = simulatedMessage.id;
                 
                 $mensajesCuerpo.scrollTop($mensajesCuerpo.prop("scrollHeight"));
-                bindMessageClickEvents(); 
 
                 $inputMensaje.val('');
                 $destinatarioSeleccionado.prop('checked', false);
